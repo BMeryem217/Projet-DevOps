@@ -50,6 +50,7 @@ pipeline {
                             DEPLOYMENT_NAME=\$(kubectl get deployments -o jsonpath='{.items[0].metadata.name}')
                             kubectl set image deployment/\$DEPLOYMENT_NAME flask-app=${DOCKER_IMAGE_NAME}:latest
                             kubectl rollout status deployment/\$DEPLOYMENT_NAME
+                            kubectl delete pod -l app=flask-app
                         """
                     }
                 }
