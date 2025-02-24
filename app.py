@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 # Données initiales pour l'API REST
 tasks = [
-    {"id": 1, "title": " course du ramadan karem", "done": False},
+    {"id": 1, "title": " courses du ramadan karem", "done": False},
     {"id": 2, "title": "Aprrendre le DevOps", "done": True},
 ]
 
