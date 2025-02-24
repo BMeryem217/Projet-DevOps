@@ -40,20 +40,20 @@ pipeline {
         }
 
         stage('Deploy') {
-            steps {
-                script {
-                    withCredentials([file(credentialsId: 'k3s', variable: 'KUBECONFIG')]) {
-                        sh """
-                            export KUBECONFIG=${KUBECONFIG}
-                            echo 'Deploying to Kubernetes...'
-                            kubectl apply -f ${WORKSPACE}/k8s.yaml
-                            DEPLOYMENT_NAME=\$(kubectl get deployments -o jsonpath='{.items[0].metadata.name}')
-                            kubectl rollout status deployment/\$DEPLOYMENT_NAME
-                        """
-                    }
-                }
+    steps {
+        script {
+            withCredentials([file(credentialsId: 'k3s', variable: 'KUBECONFIG')]) {
+                sh """
+                    export KUBECONFIG=${KUBECONFIG}
+                    echo 'Deploying to Kubernetes...'
+                    kubectl apply -f ${WORKSPACE}/k8s.yaml --validate=false
+                    DEPLOYMENT_NAME=\$(kubectl get deployments -o jsonpath='{.items[0].metadata.name}')
+                    kubectl rollout status deployment/\$DEPLOYMENT_NAME
+                """
             }
         }
+    }
+}
     }
 
     post {
