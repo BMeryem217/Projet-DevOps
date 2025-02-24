@@ -5,7 +5,7 @@ app = Flask(__name__)
 # Données initiales pour l'API REST
 tasks = [
     {"id": 1, "title": " courses du ramadan karem", "done": False},
-    {"id": 2, "title": "Aprrendre le DevOps", "done": True},
+    {"id": 2, "title": "Aprrendre DevOps", "done": True},
 ]
 
 # Route pour la page d'accueil
