@@ -1,7 +1,6 @@
 pipeline {
     agent any
     environment {
-     
         // Docker image name and tag
         DOCKER_IMAGE_NAME = 'meryembounit/devops'
         BUILD_TAG = "${env.BUILD_ID}" // Use Jenkins build ID as the tag
@@ -38,6 +37,34 @@ pipeline {
                     }
                 }
             }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    withCredentials([file(credentialsId: 'k3s', variable: 'KUBECONFIG')]) {
+                        sh """
+                            export KUBECONFIG=${KUBECONFIG}
+                            echo 'Deploying to Kubernetes...'
+                            kubectl apply -f ${WORKSPACE}/k8s.yaml
+                            DEPLOYMENT_NAME=\$(kubectl get deployments -o jsonpath='{.items[0].metadata.name}')
+                            kubectl rollout status deployment/\$DEPLOYMENT_NAME
+                        """
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+        failure {
+            echo "Pipeline failed! Check the logs for details."
+        }
+        success {
+            echo "Pipeline succeeded! Application deployed successfully."
         }
     }
 }
