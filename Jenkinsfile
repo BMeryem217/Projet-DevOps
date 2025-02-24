@@ -40,21 +40,25 @@ pipeline {
         }
 
         stage('Deploy') {
-            steps {
-                script {
-                    withCredentials([file(credentialsId: 'k3s', variable: 'KUBECONFIG')]) {
-                        sh """
-                            export KUBECONFIG=${KUBECONFIG}
-                            echo 'Deploying to Kubernetes...'
-                            kubectl apply -f ${WORKSPACE}/k8s.yaml --validate=false
-                            DEPLOYMENT_NAME=\$(kubectl get deployments -o jsonpath='{.items[0].metadata.name}')
-                            kubectl set image deployment/\$DEPLOYMENT_NAME flask-app=${DOCKER_IMAGE_NAME}:latest
-                            kubectl rollout status deployment/\$DEPLOYMENT_NAME
-                            kubectl delete pod -l app=flask-app
-                        """
-                    }
-                }
+    steps {
+        script {
+            withCredentials([file(credentialsId: 'k3s', variable: 'KUBECONFIG')]) {
+                sh """
+                    echo 'KUBECONFIG file contents:'
+                    cat ${KUBECONFIG}
+                    echo 'Testing connection to Kubernetes API server...'
+                    kubectl --kubeconfig=${KUBECONFIG} get nodes
+                    echo 'Deploying to Kubernetes...'
+                    kubectl --kubeconfig=${KUBECONFIG} apply -f ${WORKSPACE}/k8s.yaml --validate=false
+                    DEPLOYMENT_NAME=\$(kubectl --kubeconfig=${KUBECONFIG} get deployments -o jsonpath='{.items[0].metadata.name}')
+                    kubectl --kubeconfig=${KUBECONFIG} set image deployment/\$DEPLOYMENT_NAME flask-app=${DOCKER_IMAGE_NAME}:latest
+                    kubectl --kubeconfig=${KUBECONFIG} rollout status deployment/\$DEPLOYMENT_NAME
+                    kubectl --kubeconfig=${KUBECONFIG} delete pod -l app=flask-app
+                """
             }
+        }
+    }
+}
         }
     }
 
