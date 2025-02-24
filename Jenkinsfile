@@ -1,8 +1,7 @@
 pipeline {
     agent any
     environment {
-        // Reference the GitHub token credential by its ID
-        GITHUB_TOKEN = credentials('Github')
+     
         // Docker image name and tag
         DOCKER_IMAGE_NAME = 'meryembounit/devops'
         BUILD_TAG = "${env.BUILD_ID}" // Use Jenkins build ID as the tag
