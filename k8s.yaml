@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: flask-app
-        image: meryembounit/devops:latest  # Replace with your Docker image
+        image: meryembounit/devops:${BUILD_ID}  # Replace with your Docker image
         imagePullPolicy: Always
         ports:
         - containerPort: 5000  # Flask app listens on port 5000

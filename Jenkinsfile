@@ -19,7 +19,7 @@ pipeline {
                         echo "Listing workspace directory:"
                         ls -l ${WORKSPACE}
                         echo "Building Docker image..."
-                        docker build -f ${WORKSPACE}/Dockerfile -t ${DOCKER_IMAGE_NAME}:${BUILD_TAG} -t ${DOCKER_IMAGE_NAME}:latest ${WORKSPACE}
+                        docker build -f ${WORKSPACE}/Dockerfile -t ${DOCKER_IMAGE_NAME}:${BUILD_TAG} -t ${DOCKER_IMAGE_NAME}:${BUILD_ID} ${WORKSPACE}
                     """
                 }
             }
