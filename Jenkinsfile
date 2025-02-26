@@ -49,7 +49,7 @@ pipeline {
                     echo 'Testing connection to Kubernetes API server...'
                     kubectl --kubeconfig=${KUBECONFIG} get nodes
                     echo 'Deploying to Kubernetes...'
-                    kubectl --kubeconfig=${KUBECONFIG} apply -f ${WORKSPACE}/k8s.yaml --validate=false
+                    kubectl --kubeconfig=${KUBECONFIG} apply -f ${WORKSPACE}/k8s.yaml
                     DEPLOYMENT_NAME=\$(kubectl --kubeconfig=${KUBECONFIG} get deployments -o jsonpath='{.items[0].metadata.name}')
                     kubectl --kubeconfig=${KUBECONFIG} set image deployment/\$DEPLOYMENT_NAME flask-app=${DOCKER_IMAGE_NAME}:latest
                     kubectl --kubeconfig=${KUBECONFIG} rollout restart deployment/\$DEPLOYMENT_NAME
